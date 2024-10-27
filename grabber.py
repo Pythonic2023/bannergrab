@@ -5,7 +5,7 @@ import socket
 
 def scan_results(reply):
     for key in reply:
-        print(f"Results for {key}")
+        print(f"\nResults for {key}")
         print(f"{reply.get(key)}", end='')
 
 
@@ -30,10 +30,11 @@ def grab(ip, stored_replies, end_scan=None):
         sock.settimeout(.1)
         sock.connect((f'{ip}', 22))
         sock.send(b'')
+        hostname = socket.gethostbyaddr(f"{ip}")  # Retrieve the hostname using the IP address of responding device
         reply = sock.recv(1024)
         if reply:
             decode_reply = reply.decode()
-            stored_replies.update({f"{ip}": f"{decode_reply}"})
+            stored_replies.update({f"{hostname[0]}": f"{decode_reply}"})
         if end_scan:
             scan_results(stored_replies)
         sock.close()
